@@ -5,9 +5,16 @@ info:
   description: An API for the FullStack Developers Final Exam
 servers:
   - url: http://localhost:3000
+tags:
+- name: "car"
+  description: "Access to Cars"
+- name: "race"
+  description: "Access to Races"
 paths:
   /cars:
     get:
+      tags:
+      - "car"
       description: Returns a list of cars
       responses:
         '200':
@@ -25,6 +32,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
+      tags:
+      - "car"
       description: Creates a new car
       requestBody:
         required: true
@@ -53,6 +62,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /cars/{_id}:
     get:
+      tags:
+      - "car"
       description: Get a car
       parameters:
         - in: path
@@ -81,6 +92,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
+      tags:
+      - "car"
       description: Updates a car
       parameters:
         - in: path
@@ -114,6 +127,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
+      tags:
+      - "car"
       description: Removes a car
       parameters:
         - in: path
@@ -131,6 +146,151 @@ paths:
                 example: {}
         '404':
           description: Car based on id is doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /races:
+    get:
+      tags:
+      - "race"
+      summary: Returns a list of races
+      responses:
+        '200':
+          description: List of races returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Race'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - "race"
+      summary: Creates a new race
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Race'
+      responses:
+        '201':
+          description: Race has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+        '400':
+          description: Invalid request when the post data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /races/{_id}:
+    get:
+      tags:
+      - "race"
+      summary: Get a race
+      parameters:
+        - in: path
+          name: _id
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Returns a race
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Race'
+        '404':
+          description: Race based on id is doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - "race"
+      summary: Updates a race
+      parameters:
+        - in: path
+          name: _id
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Race'
+      responses:
+        '200':
+          description: Race has been updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+        '400':
+          description: Invalid request when the post data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - "race"
+      summary: Removes a race
+      parameters:
+        - in: path
+          name: _id
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Race has been deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        '404':
+          description: Race based on id is doesn't exist
           content:
             application/json:
               schema:
@@ -160,6 +320,28 @@ components:
           type: number
         active:
           type: boolean
+    Race:
+      type: object
+      required:
+        - date
+        - teams
+        - street
+        - city
+      properties:
+        date:
+          type: string
+        teams:
+          type: number
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+          default: "Hungary"
+        active:
+          type: boolean
+          default: true
     Error:
       type: object
       required:
